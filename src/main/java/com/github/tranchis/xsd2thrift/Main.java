@@ -43,6 +43,7 @@ public class Main
 			"  --output=FILENAME 		: store the result in FILENAME instead of standard output\n" + 
 			"  --package=NAME    		: set namespace/package of the output file\n" + 
 			"  --nestEnums=true|false	: nest enum declaration within messages that reference them, only supported by protobuf, defaults to true\n" + 
+			"  --force-circular         : force production of IDL with circular dependencies even if not supported (eg Thrift)\n" +
 			"";
 	
 
@@ -119,6 +120,10 @@ public class Main
 					{
 						usage("Only one marshaller can be specified at a time.");
 					}
+				}
+				else if(args[i].equals("--force-circular"))
+				{
+					xp.forceCircular(true);
 				}
 				else if(args[i].startsWith("--filename="))
 				{

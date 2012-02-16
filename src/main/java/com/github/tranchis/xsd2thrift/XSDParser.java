@@ -67,6 +67,7 @@ public class XSDParser implements ErrorHandler {
     private OutputStream os;
     private String namespace;
     private boolean nestEnums = true;
+    private boolean forceCircular = false;
     
     public XSDParser(String stFile) {
         this.xsdMapping = new TreeMap<String, String>();
@@ -121,6 +122,10 @@ public class XSDParser implements ErrorHandler {
         init(stFile);
     }
 
+    public void forceCircular(boolean fc) {
+    	forceCircular = fc;
+    }
+    
     public void parse() throws Exception {
         XSOMParser parser;
 
@@ -184,7 +189,7 @@ public class XSDParser implements ErrorHandler {
             requiredTypes.removeAll(notYetDeclaredTypes);
             if (requiredTypes.isEmpty()) {
                 // Circular dependencies have been detected
-                if (marshaller.isCircularDependencySupported()) {
+                if (marshaller.isCircularDependencySupported() || forceCircular == true) {
                     // Just dump the rest
                     for (Struct s : ss) {
                         writeStruct(s, declared);
