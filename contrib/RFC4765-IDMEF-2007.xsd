@@ -8,6 +8,15 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
+
+<!-- jcmurphy added 15-Feb-2012 http://books.xmlschemata.org/relaxng/ch19-77143.html -->
+
+<xsd:simpleType name="hexBinary" id="hexBinary">
+ <xsd:restriction base="xsd:anySimpleType">
+ <xsd:whiteSpace value="collapse" fixed="true"/>
+ </xsd:restriction>
+</xsd:simpleType>
+
 	<!-- Section 1 -->
 	<!-- Omitted. This section did namespace magic and is not needed with XSD validation. -->
 
