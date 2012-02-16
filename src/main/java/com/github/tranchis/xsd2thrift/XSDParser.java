@@ -233,11 +233,12 @@ public class XSDParser implements ErrorHandler {
                 usedInEnums.add(type);
                 writeEnum(type);
             }
-            
+            //System.out.println("writeStruct type1 " + type);
+
             if (simpleTypes.containsKey(type)) {
                 type = simpleTypes.get(type);
             }
-
+            //System.out.println("writeStruct type2 " + type);
             if (!map.keySet().contains(type) && !basicTypes.contains(type) && !enums.containsKey(type)) {
                 type = "binary";
             }
@@ -330,16 +331,24 @@ public class XSDParser implements ErrorHandler {
                 itt = xs.iterateElementDecls();
                 while (itt.hasNext()) {
                     el = itt.next();
+                    //System.out.println("el next");
                     interpretElement(el, sset);
                 }
                 final Iterator<XSComplexType> ict = xs.iterateComplexTypes();
                 while (ict.hasNext()) {
+                	//System.out.println("complex next");
                     processComplexType(ict.next(), null, sset);
+                    //System.out.println("complex next: back from processCOmplexType");
                 }
+            	//System.out.println("complex next back");
+
                 final Iterator<XSSimpleType> ist = xs.iterateSimpleTypes();
                 while (ist.hasNext()) {
+                	//System.out.println("simple next");
                     processSimpleType(ist.next(), null);
                 }
+            	//System.out.println("simple next back");
+
             }
         }
     }
@@ -358,6 +367,7 @@ public class XSDParser implements ErrorHandler {
     }
 
     private String processType(XSType type, String elementName, XSSchemaSet sset) {
+    	//System.out.println("proc type " + type + " name " + elementName + " set " + sset);
         if (type instanceof XSComplexType) {
             return processComplexType(type.asComplexType(), elementName, sset);
         } else {
@@ -371,18 +381,34 @@ public class XSDParser implements ErrorHandler {
      */
     private String processSimpleType(XSSimpleType xs, String elementName) {
         String typeName = xs.getName();
+		//System.out.println("getName1 " + typeName + " eleName " + elementName);
+
         if (typeName == null) {
             typeName = elementName != null ? elementName + "Type" : generateAnonymousName();
         }
-        if (xs.isRestriction() && xs.getFacet("enumeration") != null) {
+		//System.out.println("getName2 " + typeName);
+
+		if (xs.isRestriction() && xs.getFacet("enumeration") != null) {
             createEnum(typeName, xs.asRestriction());
         } else {
+        	//System.out.println("here1");
+        	if (xs != null ) {
+        		//System.out.println("getName " + xs.getName());
+        	}
             //This is just a restriction on a basic type, find parent and map it to the type
-            while (xs != null && !basicTypes.contains(xs.getName())) {
+            while (xs != null && xs.getName() != null && !basicTypes.contains(xs.getName())) {
+ 
+//            while (xs != null && !basicTypes.contains(xs.getName())) {
+            	//System.out.println("here2");
+
                 xs = xs.getBaseType().asSimpleType();
             }
-            simpleTypes.put(typeName, xs != null ? xs.getName() : "string");
+        	//System.out.println("here3: adding to simpleTypes " + typeName + "  " + xs.getName() + " or string");
+
+            simpleTypes.put(typeName, (xs != null && xs.getName() != null) ? xs.getName() : "string");
         }
+		//System.out.println("Return..");
+		//Thread.dumpStack();
         return typeName;
     }
 
@@ -398,19 +424,26 @@ public class XSDParser implements ErrorHandler {
         if (typeName == null) {
             typeName = elementName != null ? elementName + "Type" : generateAnonymousName();
         }
+        //System.out.println("PCT: map.get");
         st = map.get(typeName);
         if (st == null) {
             st = new Struct(typeName);
             map.put(typeName, st);
 
             parent = cType;
+            //System.out.println("PCT: while start");
+
             while (parent != sset.getAnyType()) {
+                //System.out.println("PCT: while spin " + parent + " " + parent.isSimpleType());
+                
                 if (parent.isComplexType()) {
                     write(st, parent.asComplexType(), true, sset);
                     parent = parent.getBaseType();
+                } else {
+                	break;
                 }
             }
-
+            //System.out.println("PCT: proc inher");
             processInheritance(st, cType, sset);
             st.setParent(cType.getBaseType().getName());
         }
@@ -537,11 +570,15 @@ public class XSDParser implements ErrorHandler {
                 if (term.isModelGroup()) {
                     write(st, term, goingup, xss);
                 } else if (term.isElementDecl()) {
+                	//System.out.println("isElemDecl true");
                     if (term.asElementDecl().getType().getName() == null) {
+                    	//System.out.println("term..getName == null");
                         final String typeName = processType(term.asElementDecl().getType(), term.asElementDecl().getName(), xss);
+                        //System.out.println("\t typeName " + typeName);
                         st.addField(term.asElementDecl().getName(), typeName, goingup, p.getMaxOccurs().intValue() != 1, term
                                 .asElementDecl().getFixedValue(), xsdMapping);
                     } else {
+                    	//System.out.println("term..getName != null");
                         st.addField(term.asElementDecl().getName(), term.asElementDecl().getType().getName(), goingup, p.getMaxOccurs()
                                 .intValue() != 1, term.asElementDecl().getFixedValue(), xsdMapping);
                     }
