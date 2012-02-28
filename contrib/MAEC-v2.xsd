@@ -861,7 +861,7 @@ For now this is more a placeholder than anything, since an action implementation
 			<xs:annotation>
 				<xs:documentation>The type attribute is intended to provide a way of specifying the type of code being characterized.</xs:documentation>
 			</xs:annotation>
-			<xs:simpleType>
+			<xs:simpleType name="CodeType-type">
 				<xs:restriction base="xs:string">
 					<xs:enumeration value="Shellcode"/>
 					<xs:enumeration value="Exploit_Code"/>
@@ -1179,7 +1179,7 @@ For now this is more a placeholder than anything, since an action implementation
 					<xs:annotation>
 						<xs:documentation>The AssociationType attribute specifies the kind of association this Object holds for this Action.</xs:documentation>
 					</xs:annotation>
-					<xs:simpleType>
+					<xs:simpleType name="AssociationObject-AssociationType">
 						<xs:restriction base="xs:string">
 							<xs:enumeration value="Initiating"/>
 							<xs:enumeration value="Affected"/>
@@ -1202,7 +1202,7 @@ For now this is more a placeholder than anything, since an action implementation
 					<xs:annotation>
 						<xs:documentation>The Relationship attribute specifies the nature of the relationship between this Object and the Related_Object.</xs:documentation>
 					</xs:annotation>
-					<xs:simpleType>
+					<xs:simpleType name="RelatedObjectType-Relationship">
 						<xs:restriction base="cybox:ObjectRelationshipEnum"/>
 					</xs:simpleType>
 				</xs:attribute>
@@ -1225,7 +1225,7 @@ For now this is more a placeholder than anything, since an action implementation
 			<xs:annotation>
 				<xs:documentation>The type attribute specifies the nature of the relationship between behaviors that is being characterized.</xs:documentation>
 			</xs:annotation>
-			<xs:simpleType>
+			<xs:simpleType name="BehaviorRelationshipType-type">
 				<xs:restriction base="cybox:RelationshipTypeEnum">
 					<xs:enumeration value="Preceded_By"/>
 					<xs:enumeration value="Followed_By"/>

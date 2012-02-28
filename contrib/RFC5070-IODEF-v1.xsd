@@ -12,6 +12,7 @@
       </xs:documentation>
     </xs:annotation>
 
+
   <!--
    ====================================================================
    == IODEF-Document class                                           ==
@@ -67,7 +68,7 @@
                       minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="purpose" use="required">
-          <xs:simpleType>
+          <xs:simpleType name="Incident-purpose">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="traceback"/>
               <xs:enumeration value="mitigation"/>
@@ -171,7 +172,7 @@
                       minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="role" use="required">
-          <xs:simpleType>
+          <xs:simpleType name="Contact-role">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="creator"/>
               <xs:enumeration value="admin"/>
@@ -185,7 +186,7 @@
         <xs:attribute name="ext-role"
                       type="xs:string" use="optional"/>
         <xs:attribute name="type" use="required">
-          <xs:simpleType>
+          <xs:simpleType name="Contact-type">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="person"/>
               <xs:enumeration value="organization"/>
@@ -206,7 +207,7 @@
         <xs:simpleContent>
           <xs:extension base="xs:string">
             <xs:attribute name="registry">
-              <xs:simpleType>
+              <xs:simpleType name="RegistryHandle-registry">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="internic"/>
                   <xs:enumeration value="apnic"/>
@@ -385,7 +386,7 @@
                       minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="occurrence">
-          <xs:simpleType>
+          <xs:simpleType name="Assessment-occurrence">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="actual"/>
               <xs:enumeration value="potential"/>
@@ -403,7 +404,7 @@
             <xs:attribute name="severity"
                           type="iodef:severity-type"/>
             <xs:attribute name="completion">
-              <xs:simpleType>
+              <xs:simpleType name="Impact-completion">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="failed"/>
                   <xs:enumeration value="succeeded"/>
@@ -412,7 +413,7 @@
             </xs:attribute>
             <xs:attribute name="type"
                           use="optional" default="unknown">
-              <xs:simpleType>
+              <xs:simpleType name="Impact-type">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="admin"/>
                   <xs:enumeration value="dos"/>
@@ -438,12 +439,12 @@
     <xs:element name="TimeImpact">
       <xs:complexType>
         <xs:simpleContent>
-          <xs:extension base="iodef:PositiveFloatType">
+          <xs:extension base="xs:float">
             <xs:attribute name="severity"
                           type="iodef:severity-type"/>
-            <xs:attribute name="metric"
+            <xs:attribute name="metric" 
                           use="required">
-              <xs:simpleType>
+              <xs:simpleType name="TimeImpact-metric">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="labor"/>
                   <xs:enumeration value="elapsed"/>
@@ -465,7 +466,7 @@
     <xs:element name="MonetaryImpact">
       <xs:complexType>
         <xs:simpleContent>
-          <xs:extension base="iodef:PositiveFloatType">
+          <xs:extension base="xs:float">
             <xs:attribute name="severity"
                           type="iodef:severity-type"/>
             <xs:attribute name="currency"
@@ -477,7 +478,7 @@
     <xs:element name="Confidence">
       <xs:complexType mixed="true">
         <xs:attribute name="rating" use="required">
-          <xs:simpleType>
+          <xs:simpleType name="Confidence-rating">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="low"/>
               <xs:enumeration value="medium"/>
@@ -564,7 +565,7 @@
         <xs:attribute name="interface"
                       type="xs:string"/>
         <xs:attribute name="category">
-          <xs:simpleType>
+          <xs:simpleType name="System-category">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="source"/>
               <xs:enumeration value="target"/>
@@ -579,7 +580,7 @@
                       type="xs:string" use="optional"/>
         <xs:attribute name="spoofed"
                       default="unknown">
-          <xs:simpleType>
+          <xs:simpleType name="System-spoofed">
             <xs:restriction base="xs:NMTOKEN">
               <xs:enumeration value="unknown"/>
               <xs:enumeration value="yes"/>
@@ -619,7 +620,7 @@
         <xs:simpleContent>
           <xs:extension base="xs:string">
             <xs:attribute name="category" default="ipv4-addr">
-              <xs:simpleType>
+              <xs:simpleType name="Address-category">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="asn"/>
                   <xs:enumeration value="atm"/>
@@ -651,7 +652,7 @@
         <xs:simpleContent>
           <xs:extension base="iodef:MLStringType">
             <xs:attribute name="category" use="required">
-              <xs:simpleType>
+              <xs:simpleType name="NodeRole-category">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="client"/>
                   <xs:enumeration value="server-internal"/>
@@ -724,7 +725,7 @@
         <xs:simpleContent>
           <xs:extension base="xs:double">
             <xs:attribute name="type" use="required">
-              <xs:simpleType>
+              <xs:simpleType name="Counter-type">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="byte"/>
                   <xs:enumeration value="packet"/>
@@ -792,7 +793,7 @@
         <xs:simpleContent>
           <xs:extension base="xs:string">
             <xs:attribute name="type" use="required">
-              <xs:simpleType>
+              <xs:simpleType name="RecordPattern-type">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="regex"/>
                   <xs:enumeration value="binary"/>
@@ -807,7 +808,7 @@
                           type="xs:integer" use="optional"/>
             <xs:attribute name="offsetunit"
                           use="optional" default="line">
-              <xs:simpleType>
+              <xs:simpleType name="RecordPattern-offsetunit">
                 <xs:restriction base="xs:NMTOKEN">
                   <xs:enumeration value="line"/>
                   <xs:enumeration value="byte"/>
@@ -868,11 +869,6 @@
    === Data Types                                           ===
    ====================================================================
   -->
-    <xs:simpleType name="PositiveFloatType">
-      <xs:restriction base="xs:float">
-        <xs:minExclusive value="0"/>
-      </xs:restriction>
-    </xs:simpleType>
     <xs:complexType name="MLStringType">
       <xs:simpleContent>
         <xs:extension base="xs:string">
@@ -902,6 +898,12 @@
    === Global attribute type declarations                          ===
    ====================================================================
   -->
+    <xs:simpleType name="PositiveFloatType">
+      <xs:restriction base="xs:float">
+        <xs:minExclusive value="0"/>
+      </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="restriction-type">
       <xs:restriction base="xs:NMTOKEN">
         <xs:enumeration value="default"/>
@@ -976,4 +978,5 @@
         <xs:enumeration value="ext-value"/>
       </xs:restriction>
     </xs:simpleType>
+
 </xs:schema>
