@@ -69,6 +69,7 @@ public class XSDParser implements ErrorHandler {
     private boolean nestEnums = true;
     private boolean forceCircular = false;
     private boolean debug = false;
+    private String postfix = "Type";
     
     public XSDParser(String stFile) {
         this.xsdMapping = new TreeMap<String, String>();
@@ -123,6 +124,10 @@ public class XSDParser implements ErrorHandler {
         init(stFile);
     }
 
+    public void setPostfix(String pf) { 
+    	postfix = pf;
+    }
+    
     public void forceCircular(boolean fc) {
     	forceCircular = fc;
     }
@@ -382,7 +387,7 @@ public class XSDParser implements ErrorHandler {
         if (debug) { System.err.println("PST typeName:" + typeName + " elName: " + elementName); }
 
         if (typeName == null) {
-            typeName = elementName != null ? elementName + "Type" : generateAnonymousName();
+            typeName = elementName != null ? elementName + postfix : generateAnonymousName();
         }
 
         //System.out.println("PST " + typeName);
@@ -415,7 +420,7 @@ public class XSDParser implements ErrorHandler {
         String typeName = cType.getName();
         if (typeName == null) {
         	if (debug) { System.err.println("PCT typeName is null"); }
-            typeName = elementName != null ? elementName + "Type" : generateAnonymousName();
+            typeName = elementName != null ? elementName + postfix : generateAnonymousName();
         }
         if (debug) { System.err.println("PCT " + typeName); }
 

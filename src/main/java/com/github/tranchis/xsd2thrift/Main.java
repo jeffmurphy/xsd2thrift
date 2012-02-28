@@ -44,6 +44,7 @@ public class Main
 			"  --package=NAME    		: set namespace/package of the output file\n" + 
 			"  --nestEnums=true|false	: nest enum declaration within messages that reference them, only supported by protobuf, defaults to true\n" + 
 			"  --force-circular         : force production of IDL with circular dependencies even if not supported (eg Thrift)\n" +
+			"  --postfix=STRING         : postfix declarations with string, use \"\" for no postfix. default is Type\n" +
 			"";
 	
 
@@ -129,6 +130,15 @@ public class Main
 				{
 					param = args[i].split("=")[1];
 					xp.setOutputStream(new FileOutputStream(new File(param)));
+				}
+				else if(args[i].startsWith("--postfix="))
+				{
+					try {
+						param = args[i].split("=")[1];
+					} catch(Exception e) {
+						param = "";
+					}
+					xp.setPostfix(param);
 				}
 				else if(args[i].startsWith("--package="))
 				{
