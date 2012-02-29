@@ -565,7 +565,9 @@ public class XSDParser implements ErrorHandler {
             if (debug) { System.err.println("PI struct:" + st.getName() + " | sset.base: " + xt.getBaseType().getName() + " ==? " + cType.getBaseType().getName()); }
             if (debug) { System.err.println("\tbase type is " + simpleTypes.get(cType.getBaseType().getName())); }
             
-            if (xt.getBaseType() == cType) {
+            String s1 = (xt != null && xt.getBaseType() != null) ? xt.getBaseType().getName() : null;
+            String s2 = (cType != null) ? cType.getName() : null;
+            if (s1 != null && s2 != null && s1.equals(s2)) {
             	if (debug) { System.err.println("\tPI yes xt == cType"); }
                 particle = xt.asComplexType().getContentType().asParticle();
                 if (particle != null) {
