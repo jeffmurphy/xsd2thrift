@@ -435,7 +435,7 @@ public class XSDParser implements ErrorHandler {
             while (parent != sset.getAnyType()) { 
             	if (debug) { System.err.println("\tPCT parent.getName " + parent.getName()); }
                 if (parent.isComplexType()) {
-                	if (debug) { System.err.println("\t\tPCT parent isComplex"); }
+                	if (debug) { System.err.println("\t\tPCT parent isComplex baseType:" + parent.getBaseType()); }
                     write(st, parent.asComplexType(), true, sset);
                     parent = parent.getBaseType();
                 } else {
@@ -445,6 +445,8 @@ public class XSDParser implements ErrorHandler {
             }
             if (debug) { System.err.println("\t\tProcess inheritance"); }
             processInheritance(st, cType, sset);
+            if (debug) { System.err.println("\t\tBACKFROM ** Process inheritance"); }
+
             st.setParent(cType.getBaseType().getName());
         }
         return typeName;
@@ -469,18 +471,26 @@ public class XSDParser implements ErrorHandler {
         XSAttributeDecl decl;
         Iterator<? extends XSAttGroupDecl> itt;
 
+        if (debug) { System.err.println("write1 " + type); }
+        
         particle = type.getContentType().asParticle();
         if (particle != null) {
+            if (debug) { System.err.println("\twrite1 particle"); }
+
             write(st, particle.getTerm(), true, xss);
         }
 
         itt = type.getAttGroups().iterator();
         while (itt.hasNext()) {
+            if (debug) { System.err.println("\twrite1 AttGroups"); }
+
             write(st, itt.next(), true);
         }
 
         it = type.getAttributeUses().iterator();
         while (it.hasNext()) {
+            if (debug) { System.err.println("\twrite1 AttUses"); }
+
             att = it.next();
             decl = att.getDecl();
             write(st, decl, goingup && att.isRequired());
@@ -559,22 +569,36 @@ public class XSDParser implements ErrorHandler {
         XSType xt;
         XSParticle particle;
 
+        if (simpleTypes.get(cType.getBaseType().getName()) == null) {
+        	if (debug) { System.err.println("\tdont search"); }
+        	return;
+        }
+        
         ity = sset.iterateTypes();
+        int i = 0;
         while (ity.hasNext()) {
             xt = ity.next();
-            if (debug) { System.err.println("PI struct:" + st.getName() + " | sset.base: " + xt.getBaseType().getName() + " ==? " + cType.getBaseType().getName()); }
+            if (debug) { System.err.println(++i + " PI struct:" + st.getName() + " | sset.base: " + xt.getBaseType().getName() + " ==? " + cType.getBaseType().getName()); }
             if (debug) { System.err.println("\tbase type is " + simpleTypes.get(cType.getBaseType().getName())); }
-            
+
             String s1 = (xt != null && xt.getBaseType() != null) ? xt.getBaseType().getName() : null;
-            String s2 = (cType != null) ? cType.getName() : null;
+            String s2 = (cType != null) ? cType.getBaseType().getName() : null;
+            if (debug) { System.err.println("\ts1:" + s1 + " s2:" + s2); }
+            
             if (s1 != null && s2 != null && s1.equals(s2)) {
             	if (debug) { System.err.println("\tPI yes xt == cType"); }
-                particle = xt.asComplexType().getContentType().asParticle();
-                if (particle != null) {
-                    write(st, particle.getTerm(), false, sset);
-                }
-
-                processInheritance(st, xt.asComplexType(), sset);
+            	try {
+            		particle = xt.asComplexType().getContentType().asParticle();
+            		if (particle != null) {
+            			write(st, particle.getTerm(), false, sset);
+            		}
+            		if (debug) { System.err.println("\t\tRECURSE\n"); }
+                    processInheritance(st, xt.asComplexType(), sset);
+            	}
+            	catch (Exception e) {
+            		// probably xt.asComplexType() is null, which means xt is a simpleType
+            		System.err.println("\txt.isSimpleType: " + xt + " " + xt.asSimpleType());
+            	}
             } else {
             	if (debug) { System.err.println("\tPI NO xt != cType"); }
             }

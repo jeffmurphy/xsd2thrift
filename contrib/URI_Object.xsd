@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CybOX URI Object Schema. Copyright (c) 2011, The MITRE Corporation. http://cybox.mitre.org -->
+<xs:schema xmlns:URIObj="http://cybox.mitre.org/XMLSchema/objects#URIObject"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:cybox="http://cybox.mitre.org/XMLSchema/cybox_v0.7"
+  targetNamespace="http://cybox.mitre.org/XMLSchema/objects#URIObject"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xs:import namespace="http://cybox.mitre.org/XMLSchema/cybox_v0.7"
+    schemaLocation="http://cybox.mitre.org/XMLSchema/CybOX_v0.7.xsd"/>
+  <xs:element name="URI" type="URIObj:URI_Object_Type"/>
+  <xs:complexType name="URI_Object_Type">
+    <xs:annotation>
+      <xs:documentation>The URI_Object_Type type is intended to characterize Uniform Resource Identifiers (URI's).</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="cybox:DefinedObjectType">
+        <xs:sequence>
+          <xs:element name="Value" type="cybox:AnyURIObjectAttributeType">
+            <xs:annotation>
+              <xs:documentation>The Value element specifies the value of the URI.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,3 @@
+#!/bin/sh 
+JAR=xsd2thrift-1.0.one-jar.jar
+exec java -jar /usr/local/lib/$JAR  $*
